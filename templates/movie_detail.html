@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #1e1e1e; color: white; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .back-btn { display: inline-block; padding: 10px 15px; background-color: #f5c518; color: black; text-decoration: none; border-radius: 5px; font-weight: bold; margin-bottom: 20px;}
+        .movie-info { display: flex; gap: 30px; margin-bottom: 40px; background-color: #333; padding: 20px; border-radius: 10px;}
+        .movie-info img { border-radius: 10px; width: 300px; }
+        .details h1 { margin-top: 0; color: #f5c518; }
+        .badges span { background-color: #555; padding: 5px 10px; border-radius: 5px; margin-right: 10px; font-size: 14px;}
+        .cast-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;}
+        .actor { background-color: #222; text-align: center; border-radius: 10px; width: 120px; padding: 10px;}
+        .actor img { width: 100%; border-radius: 10px; }
+        
+        /* Review Section Style */
+        .review-section { margin-top: 40px; background-color: #333; padding: 20px; border-radius: 10px; }
+        .review-section input, .review-section textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box;}
+        .review-section button { padding: 10px 20px; background-color: #f5c518; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-btn">⬅ Back to Home</a>
+
+    <!-- Movie Details -->
+    <div class="movie-info">
+        {% if movie.poster_path %}
+            <img src="{{ img_url }}{{ movie.poster_path }}" alt="{{ movie.title }}">
+        {% else %}
+            <img src="https://via.placeholder.com/300x450?text=No+Image" alt="No Image">
+        {% endif %}
+        
+        <div class="details">
+            <h1>{{ movie.title }}</h1>
+            <p><i>{{ movie.tagline }}</i></p>
+            <div class="badges">
+                <span>📅 Release: {{ movie.release_date }}</span>
+                <span>⭐ Rating: {{ movie.vote_average|round(1) }}</span>
+                <span>🌐 Lang: {{ movie.original_language|upper }}</span>
+            </div>
+            <h3>Overview / Story</h3>
+            <p>{{ movie.overview }}</p>
+        </div>
+    </div>
+
+    <!-- Cast Section -->
+    <h2>Top Cast</h2>
+    <div class="cast-grid">
+        {% for actor in cast %}
+        <div class="actor">
+            {% if actor.profile_path %}
+                <img src="{{ img_url }}{{ actor.profile_path }}" alt="{{ actor.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/120x180?text=No+Pic" alt="No Pic">
+            {% endif %}
+            <p style="font-size: 14px; margin: 5px 0;"><b>{{ actor.name }}</b></p>
+            <p style="font-size: 12px; color: gray; margin: 0;">{{ actor.character }}</p>
+        </div>
+        {% else %}
+            <p>Cast information not available.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Add Review Form (With Database Link) -->
+    <div class="review-section">
+        <h2>Write a Review</h2>
+        <form method="POST">
+            <input type="text" name="user_name" placeholder="Your Name" required>
+            <textarea name="review_text" rows="4" placeholder="What did you think about the movie?" required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+
+        <!-- Yahan par database wale reviews dikhenge -->
+        <h3 style="margin-top: 30px; border-top: 1px solid #555; padding-top: 20px;">User Reviews</h3>
+        <div class="reviews-list">
+            {% for review in reviews %}
+            <div style="background-color: #222; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <strong style="color: #f5c518;">{{ review[0] }}</strong> <span style="color: gray; font-size: 12px;">says:</span>
+                <p style="margin: 8px 0 0 0; line-height: 1.5;">{{ review[1] }}</p>
+            </div>
+            {% else %}
+            <p style="color: gray;">No reviews yet. Be the first to review this movie!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

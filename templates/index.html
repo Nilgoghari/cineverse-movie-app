@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Python Movie Site</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #1e1e1e; color: white; margin: 0; padding: 20px; text-align: center; }
+        .search-bar { margin-bottom: 30px; }
+        input[type="text"] { padding: 10px; width: 300px; font-size: 16px; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; border: none; background-color: #f5c518; font-weight: bold; color: black;}
+        .movies-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .card { background-color: #333; width: 250px; border-radius: 10px; padding: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s; text-decoration: none; color: white; display: block;}
+        .card:hover { transform: scale(1.05); }
+        img { width: 100%; border-radius: 5px; }
+        h3 { font-size: 18px; margin: 10px 0; }
+        .rating { color: #f5c518; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>🎬 CineVerse Movie Finder</h1>
+    
+    <div class="search-bar">
+        <form method="POST">
+            <input type="text" name="search_query" placeholder="Search for any movie..." required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="movies-grid">
+        {% for movie in movies %}
+        <a href="/movie/{{ movie.id }}" class="card">
+            {% if movie.poster_path %}
+                <img src="{{ img_url }}{{ movie.poster_path }}" alt="{{ movie.title }}">
+            {% else %}
+                <img src="https://via.placeholder.com/250x375?text=No+Image" alt="No Image">
+            {% endif %}
+            <h3>{{ movie.title }}</h3>
+            <p class="rating">⭐ {{ movie.vote_average|round(1) }} / 10</p>
+        </a>
+        {% else %}
+            <p>No movies found. Try searching for something else!</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
